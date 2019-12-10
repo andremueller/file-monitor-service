@@ -28,20 +28,20 @@ namespace services
             
             bool is_registered(const std::string& filename)
             {
-                return this->service.is_registered(this->implementation, filename);
+                return this->get_service().is_registered(this->get_implementation(), filename);
             }
 
             void add_file(const std::string& filename)
             {
                 boost::system::error_code ec;
-                this->service.add_file(this->implementation, filename, ec);
+                this->get_service().add_file(this->get_implementation(), filename, ec);
                 boost::asio::detail::throw_error(ec, "add_file");
             }
             
             void remove_file(const std::string& filename)
             {
                 boost::system::error_code ec;
-                this->service.remove_file(this->implementation, filename, ec);
+                this->get_service().remove_file(this->get_implementation(), filename, ec);
                 boost::asio::detail::throw_error(ec, "remove_file");                
             }
 
@@ -49,7 +49,7 @@ namespace services
             void async_monitor(BOOST_ASIO_MOVE_ARG(MonHandler) handler)
             {
                 boost::system::error_code ec;
-                this->service.async_monitor(this->implementation, ec, BOOST_ASIO_MOVE_CAST(MonHandler)(handler));
+                this->get_service().async_monitor(this->get_implementation(), ec, BOOST_ASIO_MOVE_CAST(MonHandler)(handler));
                 boost::asio::detail::throw_error(ec, "async_monitor");
             }
         };

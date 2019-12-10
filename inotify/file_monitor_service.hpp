@@ -9,6 +9,7 @@
 #include <map>
 #include <algorithm>
 
+#include <boost/throw_exception.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/system/error_code.hpp>
@@ -81,10 +82,9 @@ namespace services
             {
                 if (is_registered(impl, file))
                 {
-                    boost::system::system_error e(
-                        boost::system::error_code(errno, boost::system::get_system_category()),
-                        "file_monitor_service::add_file: file is already registered '"+file+"'");
-                    BOOST_THROW_EXCEPTION(e);
+                    BOOST_THROW_EXCEPTION(boost::system::system_error(
+                        boost::system::error_code(errno, boost::system::system_category()),
+                        "file_monitor_service::add_file: file is already registered '"+file+"'"));
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace services
 
                     if (wd == -1)
                     {
-                        ec = boost::system::error_code(errno, boost::system::get_system_category());
+                        ec = boost::system::error_code(errno, boost::system::system_category());
                     }
                     else if (impl.watched_files_.left.find(wd) == impl.watched_files_.left.end())
                     {
@@ -108,7 +108,7 @@ namespace services
 
                 if (status == -1)
                 {
-                    ec = boost::system::error_code(errno, boost::system::get_system_category());
+                    ec = boost::system::error_code(errno, boost::system::system_category());
                 }
                 else if (impl.watched_files_.left.find(wd) != impl.watched_files_.left.end())
                 {
@@ -163,10 +163,9 @@ namespace services
                 int fd = inotify_init1(IN_NONBLOCK);
                 if (fd == -1)
                 {
-                    boost::system::system_error e(
-                            boost::system::error_code(errno, boost::system::get_system_category()),
-                            "file_monitor_service::init_fd: init_inotify failed");
-                    BOOST_THROW_EXCEPTION(e);
+                    BOOST_THROW_EXCEPTION(boost::system::system_error(
+                            boost::system::error_code(errno, boost::system::system_category()),
+                            "file_monitor_service::init_fd: init_inotify failed"));
                 }
                 return fd;
             }
